@@ -22,9 +22,11 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('App useEffect - Setting up auth state management');
     const checkUser = async () => {
       try {
         const currentUser = await getCurrentUser();
+        console.log('Initial auth check result:', currentUser);
         setUser(currentUser);
       } catch (error) {
         console.error('Auth error:', error);
@@ -37,11 +39,13 @@ function App() {
 
     // Set up auth state listener
     const authListener = onAuthStateChange((authUser) => {
+      console.log('Auth state changed:', authUser);
       setUser(authUser);
       setLoading(false); // Update loading state when auth state changes
     });
 
     return () => {
+      console.log('Cleaning up auth listener');
       authListener.unsubscribe();
     };
   }, []);

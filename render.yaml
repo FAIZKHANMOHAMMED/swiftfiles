@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: swiftfiles-frontend
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: VITE_API_URL
+        value: "https://swiftfiles-api.onrender.com/api"
+      - key: VITE_APP_URL
+        value: "https://swiftfiles.onrender.app"
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: "public, max-age=86400"
+
+  - type: web
+    name: swiftfiles-api
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        fromDatabase:
+          name: swiftfiles-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: "https://swiftfiles.onrender.app"
+
+databases:
+  - name: swiftfiles-db
+    plan: free
+    ipAllowList: [] 

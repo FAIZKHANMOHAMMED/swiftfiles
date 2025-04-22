@@ -17,7 +17,9 @@ export const register = async (email: string, password: string): Promise<{ user:
 // Sign in user
 export const login = async (email: string, password: string): Promise<{ user: User | null; error: AuthError | null }> => {
   try {
+    console.log('Attempting login with API URL:', `${API_URL}/auth/login`);
     const data = await apiRequest('/auth/login', 'POST', { email, password });
+    console.log('Login response data:', data);
     
     // Store token in localStorage
     localStorage.setItem('auth_token', data.token);
@@ -31,9 +33,14 @@ export const login = async (email: string, password: string): Promise<{ user: Us
     
     // Store user in localStorage
     localStorage.setItem('user', JSON.stringify(user));
+    console.log('User stored in localStorage:', user);
+    
+    // Trigger auth listeners to update UI
+    window.dispatchEvent(new Event('storage'));
     
     return { user, error: null };
   } catch (error) {
+    console.error('Login error:', error);
     return { 
       user: null, 
       error: { message: error instanceof Error ? error.message : 'An error occurred' }

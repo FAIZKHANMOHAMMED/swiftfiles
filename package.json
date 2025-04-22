@@ -1,8 +1,14 @@
 {
+  "type": "module",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "prebuild": "npm install",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node server.js"
   },
   "dependencies": {
+    "express": "^4.18.2",
     "lucide-react": "^0.303.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

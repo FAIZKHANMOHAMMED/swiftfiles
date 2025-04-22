@@ -15,21 +15,31 @@ const LoginForm: React.FC = () => {
     setLoading(true);
 
     try {
+      console.log('Login attempt with:', { email });
       const { user, error } = await signIn(email, password);
       
       if (error) {
+        console.error('Login error from API:', error);
         toast.error(error.message);
         setLoading(false);
         return;
       }
 
       if (user) {
+        console.log('Login successful, user:', user);
         toast.success('Successfully logged in!');
-        navigate('/dashboard');
+        // Force a slight delay to ensure state updates
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 100);
+      } else {
+        console.error('No user returned despite successful login');
+        toast.error('Login successful but user data is missing');
+        setLoading(false);
       }
     } catch (error) {
+      console.error('Unexpected login error:', error);
       toast.error('An unexpected error occurred');
-      console.error(error);
       setLoading(false);
     }
   };

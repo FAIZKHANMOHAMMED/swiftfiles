@@ -31,6 +31,11 @@ app.get('/', (req, res) => {
   res.send('SwiftFiles API is running');
 });
 
+// Health check endpoint for monitoring
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
