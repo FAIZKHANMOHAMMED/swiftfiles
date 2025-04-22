@@ -1,5 +1,5 @@
 import { apiRequest, API_URL } from './config';
-import { User, AuthError } from '../auth';
+import { User, AuthError, triggerAuthStateChange } from '../auth';
 
 // Register a new user
 export const register = async (email: string, password: string): Promise<{ user: User | null; error: AuthError | null }> => {
@@ -37,6 +37,12 @@ export const login = async (email: string, password: string): Promise<{ user: Us
     
     // Trigger auth listeners to update UI
     window.dispatchEvent(new Event('storage'));
+    
+    // Explicitly trigger auth state change
+    setTimeout(() => {
+      console.log('Explicitly triggering auth state change...');
+      triggerAuthStateChange();
+    }, 50);
     
     return { user, error: null };
   } catch (error) {

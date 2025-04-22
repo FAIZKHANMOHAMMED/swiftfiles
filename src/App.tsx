@@ -21,6 +21,16 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Function to manually check for redirect after login
+  const checkForRedirect = () => {
+    if (sessionStorage.getItem('redirect_after_login') === 'true' && user) {
+      console.log('Found redirect flag, user is logged in');
+      sessionStorage.removeItem('redirect_after_login');
+      return true;
+    }
+    return false;
+  };
+
   useEffect(() => {
     console.log('App useEffect - Setting up auth state management');
     const checkUser = async () => {
@@ -28,6 +38,12 @@ function App() {
         const currentUser = await getCurrentUser();
         console.log('Initial auth check result:', currentUser);
         setUser(currentUser);
+        
+        // Check if we should force a redirect to dashboard
+        if (currentUser && sessionStorage.getItem('redirect_after_login') === 'true') {
+          console.log('User is logged in and redirect flag is set');
+          window.location.href = '/dashboard';
+        }
       } catch (error) {
         console.error('Auth error:', error);
       } finally {
@@ -41,7 +57,14 @@ function App() {
     const authListener = onAuthStateChange((authUser) => {
       console.log('Auth state changed:', authUser);
       setUser(authUser);
-      setLoading(false); // Update loading state when auth state changes
+      setLoading(false);
+      
+      // Check if we should redirect after auth state change
+      if (authUser && sessionStorage.getItem('redirect_after_login') === 'true') {
+        console.log('Auth state changed and redirect flag is set');
+        sessionStorage.removeItem('redirect_after_login');
+        window.location.href = '/dashboard';
+      }
     });
 
     return () => {
@@ -52,12 +75,31 @@ function App() {
 
   // Routes that require authentication
   const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    // Instantly show content if we're redirecting after login
+    if (checkForRedirect()) {
+      return <>{children}</>;
+    }
+    
+    // Show loading indicator while checking auth
+    if (loading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">Checking authentication...</p>
+          </div>
+        </div>
+      );
+    }
     
     // If not logged in, redirect to login
-    if (!user) return <Navigate to="/login" replace />;
+    if (!user) {
+      console.log('User not authenticated, redirecting to login');
+      return <Navigate to="/login" replace />;
+    }
     
     // If logged in, show children
+    console.log('User authenticated, showing protected content');
     return <>{children}</>;
   };
 

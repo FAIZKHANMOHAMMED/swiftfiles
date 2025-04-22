@@ -27,12 +27,21 @@ export const getCurrentUser = getUser;
 type AuthChangeCallback = (user: User | null) => void;
 const authListeners = new Set<AuthChangeCallback>();
 
+// Function to manually trigger auth state change
+export const triggerAuthStateChange = () => {
+  const userJson = localStorage.getItem('user');
+  const user = userJson ? JSON.parse(userJson) : null;
+  console.log('Manually triggering auth state change with user:', user);
+  authListeners.forEach(listener => listener(user));
+};
+
 export const onAuthStateChange = (callback: AuthChangeCallback) => {
   authListeners.add(callback);
   
   // Initial call with current auth state
   const userJson = localStorage.getItem('user');
   const currentUser = userJson ? JSON.parse(userJson) : null;
+  console.log('Initial auth state for new listener:', currentUser);
   callback(currentUser);
   
   // Return unsubscribe function

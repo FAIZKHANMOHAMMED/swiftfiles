@@ -28,10 +28,23 @@ const LoginForm: React.FC = () => {
       if (user) {
         console.log('Login successful, user:', user);
         toast.success('Successfully logged in!');
-        // Force a slight delay to ensure state updates
+        
+        // First store user in session storage for more immediate access
+        sessionStorage.setItem('redirect_after_login', 'true');
+
+        // Force a longer delay before redirect to ensure state updates
         setTimeout(() => {
-          navigate('/dashboard');
-        }, 100);
+          console.log('Redirecting to dashboard...');
+          navigate('/dashboard', { replace: true });
+          
+          // After a small additional delay, trigger a manual check if redirection hasn't happened
+          setTimeout(() => {
+            if (window.location.pathname !== '/dashboard') {
+              console.log('Forced redirect to dashboard...');
+              window.location.href = '/dashboard';
+            }
+          }, 500);
+        }, 300);
       } else {
         console.error('No user returned despite successful login');
         toast.error('Login successful but user data is missing');
