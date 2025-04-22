@@ -15,6 +15,9 @@ services:
       - path: /*
         name: Cache-Control
         value: "public, max-age=86400"
+      - path: /*
+        name: Access-Control-Allow-Origin
+        value: "*"
 
   - type: web
     name: swiftfiles-api
@@ -32,6 +35,8 @@ services:
         generateValue: true
       - key: FRONTEND_URL
         value: "https://swiftfiles.onrender.app"
+      - key: CORS_ORIGIN
+        value: "https://swiftfiles.onrender.app,https://swiftfiles-frontend.onrender.com"
 
 databases:
   - name: swiftfiles-db
