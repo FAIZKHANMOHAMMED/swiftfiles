@@ -36,7 +36,7 @@ services:
       - key: FRONTEND_URL
         value: "https://swiftfiles.onrender.app"
       - key: CORS_ORIGIN
-        value: "https://swiftfiles.onrender.app,https://swiftfiles-frontend.onrender.com"
+        value: "https://swiftfiles.onrender.app,https://swiftfiles-frontend.onrender.com,https://swiftfiles.onrender.com"
 
 databases:
   - name: swiftfiles-db

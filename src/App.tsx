@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import DashboardPage from './pages/DashboardPage';
 import SharePage from './pages/SharePage';
+import DownloadRedirect from './pages/DownloadRedirect';
 
 // Components
 import Header from './components/ui/Header';
@@ -126,6 +127,7 @@ function App() {
               } 
             />
             <Route path="/share/:shareId" element={<SharePage />} />
+            <Route path="/download/:shareId" element={<DownloadRedirect />} />
           </Routes>
         </main>
         

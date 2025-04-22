@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getFileByShareId } from '../lib/files';
 import { FileMetadata } from '../lib/files';
 import { Download, FileIcon, AlertTriangle } from 'lucide-react';
-import { getDownloadLink } from '../lib/api/config';
+import { getDownloadLink, API_URL } from '../lib/api/config';
 
 const SharePage: React.FC = () => {
   const { shareId } = useParams<{ shareId: string }>();
@@ -80,6 +80,10 @@ const SharePage: React.FC = () => {
   const isText = file.type.startsWith('text/');
   const isViewable = isImage || isPDF || isText;
 
+  const handleDownload = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    console.log('Download initiated with URL:', downloadUrl);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-2xl">
@@ -109,6 +113,7 @@ const SharePage: React.FC = () => {
           <a
             href={downloadUrl}
             download
+            onClick={handleDownload}
             className="flex-1 flex items-center justify-center px-4 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors"
           >
             <Download size={20} className="mr-2" />

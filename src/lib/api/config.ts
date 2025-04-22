@@ -20,6 +20,13 @@ export const getShareableLink = (shareId: string): string => {
 
 // Function to generate download links
 export const getDownloadLink = (shareId: string): string => {
+  // For direct file download through API
+  if (API_URL.includes('render.com')) {
+    // Return the API file download endpoint when deployed on Render
+    return `${API_URL}/files/download/${shareId}`;
+  }
+  
+  // For sharing through frontend
   return `${APP_URL}/download/${shareId}`;
 };
 
