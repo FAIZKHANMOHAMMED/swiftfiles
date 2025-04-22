@@ -29,5 +29,10 @@ export default defineConfig({
       'swiftfiles.onrender.app'
     ],
     cors: true
+  },
+  define: {
+    // Make sure env variables are properly stringified for the client
+    'import.meta.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || 'https://swiftfiles-api.onrender.com/api'),
+    'import.meta.env.VITE_APP_URL': JSON.stringify(process.env.VITE_APP_URL || 'https://swiftfiles.onrender.app')
   }
 }); 

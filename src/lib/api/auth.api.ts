@@ -1,4 +1,4 @@
-import { apiRequest } from './config';
+import { apiRequest, API_URL } from './config';
 import { User, AuthError } from '../auth';
 
 // Register a new user
